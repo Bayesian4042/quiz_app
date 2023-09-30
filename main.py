@@ -89,7 +89,7 @@ def create_quiz_template():
 
 
 def create_quiz_chain(prompt):
-    model_name = "gpt-4"
+    model_name = "gpt-3.5-turbo"
     temperature = 0.7
     chain = LLMChain(llm=ChatOpenAI(model_name=model_name, temperature=temperature,
                                     openai_api_key=os.environ["openai_key"]),
