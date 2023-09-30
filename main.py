@@ -24,8 +24,7 @@ class Quiz(BaseModel):
 def create_quiz_template():
     template = """
     You are an expert quiz maker for {technical_field}.
-    Create a quiz with {number_of_questions} {quiz_type} questions about the following concept/context: {quiz_content}.
-    The questions should align with the student's capability, which is described as: {difficulty_level_description}.
+    Create a {level} level quiz with {number_of_questions} {quiz_type} questions about the following concept/context: {quiz_content}.
     {format_instructions}
 
     The format for each quiz type is as follows:
@@ -90,13 +89,14 @@ def create_quiz_template():
 
 
 def create_quiz_chain(prompt):
-    model_name = "gpt-3.5-turbo"
+    model_name = "gpt-4"
     temperature = 0.7
     chain = LLMChain(llm=ChatOpenAI(model_name=model_name, temperature=temperature,
                                     openai_api_key=os.environ["openai_key"]),
                      prompt=prompt)
 
     return chain
+
 
 def main():
     st.title("QUIZ test app")
@@ -105,12 +105,12 @@ def main():
     chain = create_quiz_chain(prompt_template)
     topic = st.text_area("Topic ex. SQL : <skill> ")
     context = st.text_area("Enter the context of topic: ex. optimization techniques")
-    capability_def = st.text_area("Enter Capability definition")
+    level = st.text_area("Enter level: beginner, intermediate, advance")
     num_questions = st.number_input("Enter the number of questions", min_value=1, max_value=5)
     quiz_type = st.selectbox("Select quiz type: ", ["Multi-Choice", "True-False", "Open-Ended"])
     if st.button("Generate Quiz"):
         quiz_response = chain.run(number_of_questions=num_questions, quiz_type=quiz_type, technical_field=topic,
-                                  quiz_content=context,difficulty_level_description=capability_def)
+                                  quiz_content=context,level=level)
         st.json(quiz_response)
 
 
