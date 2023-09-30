@@ -3,7 +3,7 @@ from langchain import PromptTemplate
 from langchain.output_parsers import PydanticOutputParser
 from pydantic import BaseModel, Field, validator
 from typing import List
-
+import os
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import LLMChain
 import streamlit as st
@@ -93,7 +93,7 @@ def create_quiz_chain(prompt):
     model_name = "gpt-3.5-turbo"
     temperature = 0.7
     chain = LLMChain(llm=ChatOpenAI(model_name=model_name, temperature=temperature,
-                                    openai_api_key="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"),
+                                    openai_api_key=os.environ["openai_key"]),
                      prompt=prompt)
 
     return chain
