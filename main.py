@@ -32,12 +32,12 @@ def create_quiz_template():
 
     - Multi-Choice: 
       - Questions:
-        1. {Question1}: a. {Answer1}, b. {Answer2}, c. {Answer3}, d. {Answer4}
-        2. {Question2}: a. {Answer1}, b. {Answer2}, c. {Answer3}, d. {Answer4}
+        1. <Question1>: a. <Answer1>, b. <Answer2>, c. <Answer3>, d. <Answer4>
+        2. <Question2>: a. <Answer1>, b. <Answer2>, c. <Answer3>, d. <Answer4>
         ...
       - Answers:
-        1. {Answer1}: a|b|c|d
-        2. {Answer2}: a|b|c|d
+        1. <Answer1>: a|b|c|d
+        2. <Answer2>: a|b|c|d
         ...
       - Example:
         Questions:
@@ -51,12 +51,12 @@ def create_quiz_template():
 
     - True-False:
       - Questions:
-        1. {Question1}: True|False
-        2. {Question2}: True|False
+        1. <Question1>: True|False
+        2. <Question2>: True|False
         ...
       - Answers:
-        1. {Answer1}: True|False
-        2. {Answer2}: True|False
+        1. <Answer1>: True|False
+        2. <Answer2>: True|False
         ...
       - Example:
         Questions:
@@ -68,12 +68,12 @@ def create_quiz_template():
 
     - Open-ended:
       - Questions:
-        1. {Question1}
-        2. {Question2}
+        1. <Question1>
+        2. <Question2>
         ...
       - Answers:
-        1. {Answer1}
-        2. {Answer2}
+        1. <Answer1>
+        2. <Answer2>
         ...
       - Example:
         Questions:
@@ -81,6 +81,7 @@ def create_quiz_template():
         Answers:
           1. SQL is a standard language which stands for Structured Query Language based on the English language. MySQL is a database management system.
     """
+
     parser = PydanticOutputParser(pydantic_object=Quiz)
     prompt = PromptTemplate.from_template(template=template,
                                           partial_variables={"format_instructions": parser.get_format_instructions()})
@@ -102,13 +103,14 @@ def main():
     st.write("")
     prompt_template = create_quiz_template()
     chain = create_quiz_chain(prompt_template)
-    topic = st.text_area("Topic ex. SQL Optimization : <skill> <sub-skill>")
-    context = st.text_area("Enter the context of topic: ex. basic sql query optimization techniques")
+    topic = st.text_area("Topic ex. SQL : <skill> ")
+    context = st.text_area("Enter the context of topic: ex. optimization techniques")
+    capability_def = st.text_area("Enter Capability definition")
     num_questions = st.number_input("Enter the number of questions", min_value=1, max_value=5)
     quiz_type = st.selectbox("Select quiz type: ", ["Multi-Choice", "True-False", "Open-Ended"])
     if st.button("Generate Quiz"):
         quiz_response = chain.run(number_of_questions=num_questions, quiz_type=quiz_type, technical_field=topic,
-                                  quiz_content=context)
+                                  quiz_content=context,difficulty_level_description=capability_def)
         st.json(quiz_response)
 
 
