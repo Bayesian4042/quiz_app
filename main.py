@@ -24,63 +24,62 @@ class Quiz(BaseModel):
 def create_quiz_template():
     template = """
     You are an expert quiz maker for {technical_field}.
-    Create a quiz with {number_of_questions} {quiz_type} about following concept/context: {quiz_content}.
-    Let's think step by step. 
+    Create a quiz with {number_of_questions} {quiz_type} questions about the following concept/context: {quiz_content}.
+    The questions should align with the student's capability, which is described as: {difficulty_level_description}.
     {format_instructions}
-    The format of each quiz type should be as such:
+
+    The format for each quiz type is as follows:
+
     - Multi-Choice: 
       - Questions:
-        <Question1>: <a. Answer1>, <b. Answer2>, <c. Answer3>, <d. Answer4>
-        <Question2>: <a. Answer1>, <b. Answer2>, <c. Answer3>, <d. Answer4>
+        1. {Question1}: a. {Answer1}, b. {Answer2}, c. {Answer3}, d. {Answer4}
+        2. {Question2}: a. {Answer1}, b. {Answer2}, c. {Answer3}, d. {Answer4}
         ...
       - Answers:
-        <Answer1>: <a|b|c|d>
-        <Answer2>: <a|b|c|d>
+        1. {Answer1}: a|b|c|d
+        2. {Answer2}: a|b|c|d
         ...
       - Example:
         Questions:
-         - Question 1. What command is used to create a new table in SQL?
+         1. What command is used to create a new table in SQL?
           a. CREATE TABLE
           b. BUILD TABLE
           c. GENERATE TABLE
           d. None of the above
-
         Answers:
-          - Answer 1: a
+          1. a
 
     - True-False:
       - Questions:
-        <Question1>: <true|false>
-        <Question2>: <true|false>
+        1. {Question1}: True|False
+        2. {Question2}: True|False
         ...
-
-     - Answers:
-        <Answer1>: true
-        <Answer2>: false
+      - Answers:
+        1. {Answer1}: True|False
+        2. {Answer2}: True|False
         ...
       - Example:
         Questions:
-          - Question 1. SQL table can contain more than one primary key.?
+          1. SQL tables can contain more than one primary key.
             a. True
             b. False
         Answers:
-          - Answer 1: b
+          1. b
 
     - Open-ended:
-        - Questions:
-          <Question1>: 
-          <Question2>:
-          ...
-        - Answers:
-          <Answer1>:
-          <Answer2>:
-          ...
-        - Example:
-          Questions:
-            - Question 1: What is the difference between SQL and MySQL?
-
-          Answers:
-            - Answer 1: SQL is a standard language which stands for Structured Query Language based on the English language. MySQL is a database management system. 
+      - Questions:
+        1. {Question1}
+        2. {Question2}
+        ...
+      - Answers:
+        1. {Answer1}
+        2. {Answer2}
+        ...
+      - Example:
+        Questions:
+          1. What is the difference between SQL and MySQL?
+        Answers:
+          1. SQL is a standard language which stands for Structured Query Language based on the English language. MySQL is a database management system.
     """
     parser = PydanticOutputParser(pydantic_object=Quiz)
     prompt = PromptTemplate.from_template(template=template,
